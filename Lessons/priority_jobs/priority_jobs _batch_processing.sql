@@ -1,6 +1,6 @@
 /* Data Pipeline Creation for Batch Jobs */
 
-CREATE OR REPLACE TEMP TABLE src_priority_jobs as 
+CREATE OR REPLACE TEMPORARY TABLE src_priority_jobs AS 
 SELECT (
   jpf.job_id,
   jpf.job_title_short,
@@ -49,12 +49,12 @@ MERGE INTO main.priority_jobs_snapshot as tgt
 USING src_priority_jobs as src
 ON tgt.job_id = src.job_id
 
-WHEN MATCH AND tgt.priority_lvl IS DISTINCT FROM src.priority_lvl THEN
+WHEN MATCHED AND tgt.priority_lvl IS DISTINCT FROM src.priority_lvl THEN
   UPDATE SET 
     priority_lvl = src.priority_lvl
     updated_at = src.updated_at
   
-WHEN NOT MATCH THEN
+WHEN NOT MATCHED THEN
   INSERT (
     job_id,
     job_title_short,
@@ -74,7 +74,11 @@ WHEN NOT MATCH THEN
     src.updated_at
   );
   
-  /* Data warehouse state query */
+  WHEN NOT MATCHED BY SOURCE
+  THEN DELETE;
+  
+  
+  /* Data warehouse query */
   SELECT
     job_title_short,
     COUNT(*) as job_count,
