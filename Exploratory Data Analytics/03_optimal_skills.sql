@@ -23,8 +23,8 @@ INNER JOIN skills_dim as sd
   ON sjd.skill_id = sd.skill_id
  WHERE 
    jpf.job_title_short = 'Data Engineer'
-   AND jpf.salary_year_avg IS NOT NULL --filtering jobs (with skills) without salary entry
-   AND jpf.job_work_from_home = TRUE /* for remote jobs*/
+   AND jpf.salary_year_avg IS NOT NULL
+   AND jpf.job_work_from_home = TRUE 
  GROUP BY jpf.job_title_short, sd.name
  HAVING 
    COUNT(jpf.*) > 100
