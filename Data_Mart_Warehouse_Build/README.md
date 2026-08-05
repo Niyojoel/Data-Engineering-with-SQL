@@ -1,6 +1,5 @@
-This project is a full data pipeline build that leverage a data warehouse using Duckdb as our database infrastructure to extract from sources (csv files on data engineering related job postings), load into the data warehouse and transform the data into ideal form for various users who might need to further explore them in Power BI tools, or for Machine learning purposes. 
-
-The project engineers a date warehouse, and for data marts for suitable purposes, all within a database seperated by schemas
+# 🏗️ Data Warehouse & Mart Build: Production ETL Pipeline.
+An end-to-end data pipeline build that extract from sources (csv files on data engineering related job postings), into a normalized data warehouse with a star schema design and then build specialized data marts
 
 ---
 
@@ -12,6 +11,18 @@ The project engineers a date warehouse, and for data marts for suitable purposes
 - 🛠️ **Development:** VS Code for SQL editing + Terminal for DuckDB CLI  
 - 📦 **Version Control:** Git/GitHub for versioned SQL scripts  
 
+--- 
+## 🧩 Problem & Context
+
+Raw job posting data arrives as flat CSV files in Google Cloud Storage—not structured for analytical queries. Analysts need to answer:
+
+  - Which skills are most in-demand over time?
+  - What are hiring trends by company and location?
+  - How do salary patterns vary by role and skill?
+
+**Challenge**: To ensure consistent and reliable analytics, data teams require a central data warehouse as their single source of truth. Also  targeted data marts that pre-aggregate data for specific business functions, boosting query performance while cutting analytical complexity and resource strain are equally useful.
+
+**Solution**: End-to-end ETL pipeline that extracts CSVs from cloud storage, normalizes them into a star schema warehouse (separating facts from dimensions), and creates specialized data marts optimized for specific use cases (flat queries, skill demand analysis, priority role tracking).
 ---
 
 ## 📂 Repository Structure
