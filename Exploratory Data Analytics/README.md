@@ -32,7 +32,6 @@ A well-defined Job market analysis would tend to answer questions like:
 
 The project analyzes a **data warehouse** built using a star schema design. The warehouse structure consists of:
 
-![Data Warehouse Schema](./images/1_2_Data_Warehouse.png)
 
 - **Fact Table:** `job_postings_fact` - Central table containing job posting details (job titles, locations, salaries, dates, etc.)
 - **Dimension Tables:** 
@@ -56,7 +55,7 @@ By querying across these interconnected tables, I extracted insights about skill
 
 ## 📂 Repository Structure
 
-```text
+```
 1_EDA/
 ├── 01_top_demanded_skills.sql    # Demand analysis query
 ├── 02_top_paying_skills.sql      # Salary analysis query

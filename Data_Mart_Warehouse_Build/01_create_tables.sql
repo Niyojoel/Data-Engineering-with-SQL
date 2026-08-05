@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS job_postings_fact;
 DROP TABLE IF EXISTS company_dim;
 DROP TABLE IF EXISTS skills_dim;
 
-SELECT "Creating company_dim table" as 'message'
+SELECT "Creating company_dim table" as info
 
 --Creating company dimension table
 CREATE TABLE company_dim (
@@ -11,18 +11,28 @@ CREATE TABLE company_dim (
   company_name   VARCHAR   NOT NULL
 );
 
-SELECT "Creating skills_dim table" as 'message'
+SELECT "Creating skills_dim table" as info
 
 --Creating skills dimension table
 CREATE TABLE skills_dim (
   skill_id      INTEGER   PRIMARY KEY,
   skill_name    VARCHAR   NOT NULL,
-  skill_type    VARCHAR
+  skill_type    VARCHAR,
+  CONSTRAINT skill_type_check CHECK(skill_type IN ('programming', 'query', 'statistical'))
 );
 
+SELECT "Creating skills_jobs_dim table" as info
 
+--Creating jobs-skills bridge table
+CREATE TABLE skills_job_dim (
+  skill_id   INTEGER,
+  job_id     INTEGER,
+  CONSTRAINT skill_job_key PRIMARY KEY (skill_id, job_id),
+  FOREIGN KEY (skill_id) REFERENCES skills_dim(skill_id),
+  FOREIGN KEY (job_id) REFERENCES job_postings_fact(job_id)
+);
 
-SELECT "Creating job_postings_fact table" as 'message'
+SELECT "Creating job_postings_fact table" as info
 
 --Creating job postings dimension table
 CREATE TABLE job_postings_fact (
@@ -45,15 +55,3 @@ CREATE TABLE job_postings_fact (
   FOREIGN KEY (company_id) REFERENCES company_dim(company_id),
   CONSTRAINT salary_rate_check CHECK(salary_rate IN ('Hourly', 'Weekly', 'Monthly', 'Yearly'))
 );           
-
-
-SELECT "Creating skills_jobs_dim table" as 'message'
-
---Creating jobs-skills bridge table
-CREATE TABLE skills_job_dim (
-  skill_id   INTEGER,
-  job_id     INTEGER,
-  CONSTRAINT skill_job_key PRIMARY KEY (skill_id, job_id),
-  FOREIGN KEY (skill_id) REFERENCES skills_dim(skill_id),
-  FOREIGN KEY (job_id) REFERENCES job_postings_fact(job_id)
-);
