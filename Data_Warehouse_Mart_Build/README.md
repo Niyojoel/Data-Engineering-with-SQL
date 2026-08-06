@@ -1,7 +1,7 @@
 # 🏗️ Data Warehouse & Mart Build: Production ETL Pipeline.
 An end-to-end data pipeline build that extract from sources (csv files on data engineering related job postings), into a normalized data warehouse with a star schema design and then build specialized data marts
 
-![Data warehouse and mart pipeline build](/Data_Mart_Warehouse_Build/images/project.png)
+![Data warehouse and mart pipeline build](/Data_Warehouse_Mart_Build/images/project.png)
 ---
 
 ## 🧰 Tech Stack
@@ -20,7 +20,7 @@ Raw job posting data arrives as flat CSV files in Google Cloud Storage—not str
   - Which skills are most in-demand over time?
   - What are hiring trends by company and location?
   - How do salary patterns vary by role and skill?
-
+  
 **Challenge**: To ensure consistent and reliable analytics, data teams require a central data warehouse as their single source of truth. Also  targeted data marts that pre-aggregate data for specific business functions, boosting query performance while cutting analytical complexity and resource strain are equally useful.
 
 **Solution**: End-to-end ETL pipeline that extracts CSVs from cloud storage, normalizes them into a star schema warehouse (separating facts from dimensions), and creates specialized data marts optimized for specific use cases (flat queries, skill demand analysis, priority role tracking).
@@ -54,7 +54,7 @@ Raw job posting data arrives as flat CSV files in Google Cloud Storage—not str
 
 - **Schema Composition**
 
-![main warehouse](/Data_Mart_Warehouse_Build/images/main_warehouse.png)
+![main warehouse](/Data_Warehouse_Mart_Build/images/main_warehouse.png)
 
 - **Initail Load Execution**: Used the duckdb `READ_CSV` function with `AUTO_DETECT` option to load source csv files into the warehouse.
 
@@ -64,7 +64,7 @@ Raw job posting data arrives as flat CSV files in Google Cloud Storage—not str
 
 - **Schema Composition**
 
-![flat mart](/Data_Mart_Warehouse_Build/images/flat_mart.png)
+![flat mart](/Data_Warehouse_Mart_Build/images/flat_mart.png)
 
 - **Wide Table Design**: All relevant fields or attributes are united into a single wide design on the `job_postings` table.
 - **Table Syncing**: `CREATE OR REPLACE` clause to create fresh table on every batch process.
@@ -76,7 +76,7 @@ Raw job posting data arrives as flat CSV files in Google Cloud Storage—not str
 
 - **Schema Composition**
 
-![skills mart](/Data_Mart_Warehouse_Build/images/skills_mart.png)
+![skills mart](/Data_Warehouse_Mart_Build/images/skills_mart.png)
 
 - **Date Extraction**: Unique selection with `DISTINCT` clause on specific date parts extracts using `DATE_TRUNC` and `EXTRACT` functions to populate the `date_month_dim` table.
 - **Aggregations**: `SUM` and `COUNT` aggregation by `skill_id`, `job_title_short` and `month_start_date` groupings with `ORDER BY` application to build the `skill_demand_monthly_fact` table.
@@ -89,7 +89,7 @@ Raw job posting data arrives as flat CSV files in Google Cloud Storage—not str
 
 - **Schema Composition**
 
-![priority_mart](/Data_Mart_Warehouse_Build/images/priority_mart.png)
+![priority_mart](/Data_Warehouse_Mart_Build/images/priority_mart.png)
 
 - **Cross-Schema Joins**: Cross-schema table `LEFT JOIN` of `job_postings_fact` to `company_dim` from `main` schema and an `INNER JOIN` to `priority_roles` to implement a selection insert into the `priority_job_snapshot` table.
 - **Batch Update**: Simulating how a data warehouse or mart update - pulling in and synchronizing changes from source to target tables, can be substituted for complete rebuild process for time and resources optimization using the `UPDATE`, `INSERT` and `DELETE` or `MERGE` data manipulation expressions.
@@ -101,7 +101,7 @@ Raw job posting data arrives as flat CSV files in Google Cloud Storage—not str
 
 - **Schema Composition**
 
-![company mart](/Data_Mart_Warehouse_Build/images/company_mart.png)
+![company mart](/Data_Warehouse_Mart_Build/images/company_mart.png)
 
 - **Unique Id Generation** Using `ROW_NUMBER` with  `ORDER BY` expression to generate unique ids on the `location_dim`, `job_title_dim` and `job_title_short_dim` table.
 - **Multiple Cross-schema Joins**: Multiple Cross-schema `INNER JOIN` among `job_postings_fact` from the `main` schema to the `company_mart` schema firstly to `company_dim` and `location_dim` tables to perform selection insert into the `company_location_bridge` table and also to `job_title_dim` and `job_title_short_dim` tables to populate the `job_title_bridge` table.
